@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to the magic room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    {#    <link rel="stylesheet" href="{{url_for('static', filename='css/sb-admin-2.css')}}">#}
+</head>
+<body style="width:450px; margin:0 auto;">
+<br>
+Welcome to the magic room!<br>
+Hope you can get the gift easily!<br>
+<br>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="container">
+            <div class="alert alert-warning">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endwith %}
+<br>
+
+<div class="divroot-container" align="middle">
+    <table width="525px">
+        <tbody>
+        {% if table > 0 %}
+            <table border="1" bordercolor="cornflowerblue">
+                {% for rows in table_content %}
+                    <tr align="center" valign="middle">
+                        {% for cols in rows %}
+                            <td bgcolor="{{ cols.attr_label }}" valign="middle" align="middle" width="30px" height="30px">
+                                {{ cols.content }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+        {% if table < 0 %}
+            <div align="left">
+            恭喜你！成功解出了所有的答案！<br>
+            今天是情人节，本来应该约你出来玩，结果因为疫情我就只能送你一段视频咯。<br>
+            </div>
+
+            <div>
+                <video width="525" controls>
+
+                    <source src="{{url_for('static', filename='media/video.MP4')}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        {% endif %}
+        <br>
+        {% if option > 0 %}
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress_value }}" aria-valuemin="0"
+                     aria-valuemax="100"
+                     style="width: {{ progress_value }}%;">
+                    {{ progress_value }}%
+                </div>
+            </div>
+            <form action="/stage/query" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="length_limit" value="{{ question.length }}">
+                <input type="hidden" name="question_id" value="{{ question.ident }}">
+                <div class="input-group">
+                    <span class="input-group-addon form-control" id="question-label-addon"
+                          align="left">{{ question.label }}</span>
+                    {{ query_form.InputField }}
+                </div>
+                {{ query_form.submit }}
+            </form>
+        {% endif %}
+        {% if option < 0 %}
+            <form action="/stage2/query" method="post" enctype="multipart/form-data">
+                <div align="left">
+                    哇，恭喜你！已经回答出了所有的问题，然而，通往最后的礼物仓库还有一扇门，门上还有三把锁。你还需要解出三把锁的密码才能打开门。所有的线索都在上面的图中和下面的几句描述中，加油！
+                    <br>
+                    提示1: 皮卡丘写代码经常搞不清楚sort到底是正序的还是倒序的，现在他要找第二长的，该怎么办呢？<br>
+                    提示2：有一些数字是需要记住的，比如经常出现在acm.sjtu.edu.cn上的一组数字。<br>
+                    标准输入格式：第一把钥匙是一个8位数字，第二把是12位数字，第三把是10个字符。
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon form-control" id="question-label-addon-1"
+                          align="left">第一把钥匙</span>
+                    {{ query_form.Key1 }}
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon form-control" id="question-label-addon-2"
+                          align="left">第二把钥匙</span>
+                    {{ query_form.Key2 }}
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon form-control" id="question-label-addon-3"
+                          align="left">第三把钥匙</span>
+                    {{ query_form.Key3 }}
+                </div>
+                {{ query_form.submit }}
+            </form>
+        {% endif %}
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
